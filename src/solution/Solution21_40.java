@@ -133,4 +133,78 @@ public class Solution21_40 {
 //        }
         return result;
     }
+
+    public Integer search_insert_position(int[] nums, int target){
+        if(nums.length == 0){
+            return 0;
+        }
+        Boolean found = false;
+        Integer max = nums.length - 1;
+        Integer min = 0;
+        Integer current = (max - min) / 2;
+
+        Integer result = -1;
+        while (!found){
+            if(nums[current] == target){
+                result = current;
+                break;
+            }
+            if(nums[current] > target){
+                max = current;
+            }
+            if(nums[current] < target){
+                min = current;
+            }
+            if(max == min){
+                if(nums[max] > target){
+                    result = max;
+                }else{
+                    result = max + 1;
+                }
+                break;
+
+            }
+            if(max-min == 1){
+                if(target <= nums[min]){
+                    result = min;
+                } else if(nums[max] >= target){
+                    result = max;
+                }else if(target > nums[max]){
+                    result = max + 1;
+                }
+                break;
+            }
+            current = max - (max - min) / 2;
+
+        }
+
+        return result;
+    }
+
+    public String countAndSay(int n) {
+        String input = "1";
+        StringBuilder output = new StringBuilder("1");
+
+        for(int i = 1; i < n; i++){
+            int count = 1;
+            Character currentNum = input.charAt(0);
+             output = new StringBuilder();
+            for(int j = 1; j < input.length(); j++){
+                Character tmpCurrentNum = input.charAt(j);
+                if(currentNum.equals(tmpCurrentNum)){
+                    count ++;
+                }else{
+                    output.append(String.valueOf(count) + currentNum);
+                    count = 1;
+                }
+                currentNum = tmpCurrentNum;
+
+            }
+            output.append(String.valueOf(count) +currentNum);
+
+
+            input  = output.toString();
+        }
+        return output.toString();
+    }
 }
