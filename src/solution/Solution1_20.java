@@ -1,6 +1,9 @@
 package solution;
 
 
+import bean.ListNode;
+import solution.solution_other.IntersectionOfTwoArraysII;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -122,5 +125,97 @@ public class Solution1_20 {
         return result ;
     }
 
+    // id 2
 
+
+
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2){
+        ListNode result = new ListNode(0);
+        ListNode header = result;
+        if(l1 == null && l2 != null){
+            return l2;
+        }
+        if(l1 != null && l2 == null){
+            return l1;
+        }
+        if(l1 == null && l2 == null){
+            return result;
+        }
+        int sum = l1.val + l2.val;
+        result.val = sum >= 10 ? sum - 10 : sum;
+        int plus = sum >= 10 ? 1 : 0;
+        while(l1.next != null && l2.next !=null){
+            int temp1 = l1.next.val;
+            int temp2 = l2.next.val;
+            sum = temp1 + temp2 + plus;
+            result.next = new ListNode(0);
+            result = result.next;
+            result.val = sum >= 10 ? sum - 10 : sum;
+            plus = sum >= 10 ? 1 : 0;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        while(l1.next!= null){
+            int temp1 = l1.next.val;
+            sum = temp1 + plus;
+            result.next = new ListNode(0);
+            result = result.next;
+            result.val = sum >= 10 ? sum - 10 : sum;
+            plus = sum >= 10 ? 1 : 0;
+            l1 = l1.next;
+        }
+        while(l2.next!= null){
+            int temp2 = l2.next.val;
+            sum = temp2+ plus;
+            result.next = new ListNode(0);
+            result = result.next;
+            result.val = sum >= 10 ? sum - 10 : sum;
+            plus = sum >= 10 ? 1 : 0;
+            l2 = l2.next;
+        }
+        if (plus == 1){
+            result.next = new ListNode(1);
+        }
+        return header;
+    }
+
+    // id 3
+    public int lengthOfLongestSubstring(String s) {
+        int result = 0;
+        // 字符在s中出现的最大位置
+        Map<Character, Integer> charPosMap = new HashMap<>();
+        // 子串起始位置
+        Integer left = 0;
+        for(int i = 0; i < s.length(); i++){
+            if(charPosMap.containsKey(s.charAt(i))){
+                // 丢弃重复字符出现位置，以及左侧的所有字符
+                // charPosMap 存储的是重复字符的上一次出现位置
+                left = Math.max(left, charPosMap.get(s.charAt(i))+1);
+            }
+            charPosMap.put(s.charAt(i), i);
+            result = Math.max(result, i - left + 1);
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Solution1_20 solution1_20 = new Solution1_20();
+
+//        // id 2
+//        ListNode l1 = new ListNode(2);
+//        l1.next = new ListNode(4);
+//        l1.next.next = new ListNode(3);
+//        ListNode l2 = new ListNode(5);
+//        l2.next = new ListNode(6);
+//        l2.next.next = new ListNode(4);
+//        ListNode result = solution1_20.addTwoNumbers(l1, l2);
+//        while(result != null){
+//            System.out.println(result.val);
+//            result = result.next;
+//        }
+        // id 3
+        int result = solution1_20.lengthOfLongestSubstring("aaaaabcabbb");
+        System.out.println(result);
+    }
 }
