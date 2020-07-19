@@ -22,8 +22,57 @@ public class Solution81_100 {
         }
         return resultArray[n];
     }
+
+    // id 97
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int rows = s1.length() + 1;
+        int columns = s2.length() + 1;
+        if (s3.length() != rows + columns - 2){
+            return false;
+        }
+
+        // 普通解法
+//        boolean[][] arr = new boolean[rows][columns];
+//        arr[0][0] = true;
+
+        // 滚动数组
+        boolean[] arr2 = new boolean[columns];
+        arr2[0] = true;
+
+        for (int i = 0 ; i < rows; i++){
+            for(int j = 0; j <columns; j++){
+                int p = i+j-1;
+                if (i == 0 && j > 0){
+//                    arr[i][j] = arr[i][j-1] && (s2.charAt(j-1) == s3.charAt(p));
+                    arr2[j] = arr2[j-1]  && (s2.charAt(j-1) == s3.charAt(p));
+                }
+                if (j == 0 && i > 0){
+//                    arr[i][j] = arr[i-1][j] && (s1.charAt(i-1) == s3.charAt(p));
+                    arr2[j] = arr2[j]  && (s1.charAt(i-1) == s3.charAt(p));
+                }
+                if (i > 0 && j > 0){
+//                    arr[i][j] =  (arr[i][j-1]  && s2.charAt(j-1) == s3.charAt(p)  ) || ( arr[i-1][j]   && (s1.charAt(i-1) == s3.charAt(p)));
+                    arr2[j] = (arr2[j-1]  && s2.charAt(j-1) == s3.charAt(p)  ) || ( arr2[j]   && (s1.charAt(i-1) == s3.charAt(p)));
+                }
+            }
+        }
+//        return arr[rows-1][columns-1];
+        return arr2[columns-1];
+
+    }
+
     public static void main(String[] args){
         Solution81_100 solution81_100 = new Solution81_100();
-        System.out.println(solution81_100.numTrees(3));
+//        System.out.println(solution81_100.numTrees(3));
+        String  s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac";
+        System.out.println(solution81_100.isInterleave(s1,s2,s3));
+        s1 = "aabcc";
+        s2 = "dbbca";
+        s3 = "aadbbbaccc";
+        System.out.println(solution81_100.isInterleave(s1,s2,s3));
+        s1= "ab";
+        s2= "bc";
+        s3 = "bbac";
+        System.out.println(solution81_100.isInterleave(s1,s2,s3));
     }
 }
