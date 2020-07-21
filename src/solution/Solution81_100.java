@@ -1,6 +1,28 @@
 package solution;
 
+import bean.ListNode;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Solution81_100 {
+
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {}
+        TreeNode(int val) { this.val = val; }
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+
+
     // id 96
     public int numTrees(int n) {
         if (n == 0) return 1;
@@ -61,18 +83,53 @@ public class Solution81_100 {
 
     }
 
+    // id 95
+    public List<TreeNode> generateTrees(int n) {
+        if(n == 0){
+            return  new ArrayList<>();
+        }
+        return recursiveMakeTree(1, n);
+    }
+
+    public List<TreeNode> recursiveMakeTree(int start, int end){
+        List<TreeNode> result = new ArrayList<>();
+
+        if (start > end){
+            result.add(null);
+            return result;
+        }
+
+        for(int i = start; i <= end; i++){
+            List<TreeNode> leftTrees = recursiveMakeTree(start,i-1);
+            List<TreeNode> rightTrees = recursiveMakeTree(i+1, end);
+            for (TreeNode left : leftTrees){
+                for(TreeNode right: rightTrees){
+                    TreeNode r = new TreeNode();
+                    r.val = i;
+                    r.left = left;
+                    r.right = right;
+                    result.add(r);
+                }
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args){
         Solution81_100 solution81_100 = new Solution81_100();
 //        System.out.println(solution81_100.numTrees(3));
-        String  s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac";
-        System.out.println(solution81_100.isInterleave(s1,s2,s3));
-        s1 = "aabcc";
-        s2 = "dbbca";
-        s3 = "aadbbbaccc";
-        System.out.println(solution81_100.isInterleave(s1,s2,s3));
-        s1= "ab";
-        s2= "bc";
-        s3 = "bbac";
-        System.out.println(solution81_100.isInterleave(s1,s2,s3));
+//        String  s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac";
+//        System.out.println(solution81_100.isInterleave(s1,s2,s3));
+//        s1 = "aabcc";
+//        s2 = "dbbca";
+//        s3 = "aadbbbaccc";
+//        System.out.println(solution81_100.isInterleave(s1,s2,s3));
+//        s1= "ab";
+//        s2= "bc";
+//        s3 = "bbac";
+//        System.out.println(solution81_100.isInterleave(s1,s2,s3));
+
+        List<TreeNode> result95 = solution81_100.generateTrees(3);
+        System.out.println(result95.size());
     }
 }
