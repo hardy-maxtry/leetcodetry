@@ -207,4 +207,88 @@ public class Solution21_40 {
         }
         return output.toString();
     }
+
+    // id 37 数独
+    public void solveSudoku(char[][] board) {
+        // 第i行的数字X是否被占用
+        boolean[][] line = new boolean[9][10];
+        // 第j列的数字X是否被占用
+        boolean[][] column = new boolean[9][10];
+        // 第i行第j列所在的九宫格的数字X是否被占用
+        boolean[][][] block = new boolean[3][3][10];
+
+        // 初始化
+        for(int i = 0; i<board.length; i++){
+            for(int j = 0; j < board[i].length; j++){
+                int num = board[i][j] - '0'; // char 可以直接运算 ， ascii
+                if (num>=1 && num <=9){
+                    line[i][num] = true;
+                    column[j][num] = true;
+                    block[i/3][j/3][num] = true;
+                }
+            }
+        }
+        // 从左上角开始遍历
+        calcSudokuRecursive(board, line, column, block, 0, 0);
+    }
+
+    public boolean calcSudokuRecursive(char[][]board, boolean[][]line, boolean[][]column, boolean[][][]block, int row, int col){
+        if (col == 9){
+            // 从0行0列开始遍历，每次遍历时列+1，当列越界时，列=0，并遍历下一行，当行越界时，表示已经遍历所有格，直接返回true
+            // col越界，说明当前行的每一列都遍历完成，需要遍历下一行
+            row++;
+            col = 0;
+            // row越界，说明所有行都遍历完成，没有冲突，得到最终解
+            if (row == 9){
+                return true;
+            }
+        }
+
+        if (board[row][col] == '.'){
+            // 当前格为空是，1~9填充遍历
+            for (int x = 1; x <= 9 ; x ++){
+                // 判断行，列，九宫格中数字X是否已经被占用
+                boolean used = line[row][x] || column[col][x] || block[row/3][col/3][x];
+                if(used){
+                    // 已占用, X换下一个数字
+                    continue;
+                }else {
+                    // 当前位置填充为已使用
+                    line[row][x] = true;
+                    column[col][x] = true;
+                    block[row/3][col/3][x] = true;
+
+                    board[row][col] = (char)(x+'0');
+                    //
+                    boolean xIsValid = calcSudokuRecursive(board,line,column, block, row, col + 1);
+                    if(xIsValid){
+                        // 当前位置填写X后，在下一个位置可用
+                        return true;
+                    }else{
+                        // 当前位置填写X后，在下一个位置不可用
+                        // 回溯, 使用空白填充，并将已使用状态重置为未使用
+                        board[row][col] = '.';
+                        line[row][x] = false;
+                        column[col][x] = false;
+                        block[row/3][col/3][x] = false;
+                    }
+
+                }
+            }
+        }else{
+            // 当前格已有数字，直接进行下一个单元格计算
+            return calcSudokuRecursive(board, line, column, block , row, col+1);
+        }
+        // (board[row][col] 填写了 1~9，全部都冲突的情况，才会走到这里
+        return false;
+    }
+
+    public static void main(String[] args){
+        Solution21_40 solution21_40 = new Solution21_40();
+        char[][] board = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+
+        solution21_40.solveSudoku(board);
+        System.out.println(1);
+
+    }
 }
