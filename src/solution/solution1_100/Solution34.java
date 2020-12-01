@@ -27,6 +27,7 @@ public class Solution34 {
                 result = mid;
             }else if (findLower && nums[mid] == target){
                 // 当查找左侧第一个位置时，中点值等于目标值时，由于可能存在多个连续值，从中点左侧继续查找
+                // 如果 right < target最左侧下标，此时一定有right<left 则while循环会退出，mid就是最左侧下标
                 right = mid - 1;
                 result = mid;
             }else{
